@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  redis:
+    image: redis:alpine3.8
+
+  test:
+    image: golang:1.10-alpine3.8
+    environment:
+      - REDIS_CONFIG={"sentinel_addrs":["redis:6379"],"master_name":"","db":0}
+    volumes:
+      - ./:/go/src/github.com/imega/redis-learn
+    working_dir: "/go/src/github.com/imega/redis-learn"
+    command: >
+      /bin/sh -c "
+        go test -v github.com/imega/redis-learn/tests
+      "
